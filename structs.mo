@@ -1,25 +1,15 @@
 struct Vec2 {
-    Int32 x
-    Int32 y
+  i32 x
+  i32 y
 }
 
-
-fn add(Vec2* vec, Vec* vec2) {
+fn add(vec Vec2, vec2 Vec2) {
     vec.x += vec2.x
     vec.y += vec2.y
 }
 
-// Use add as method by implicitly using first pointer as self pointer. (maybe require annotation like @method or smthing?)
+// Use add as method by implicitly using first pointer as self pointer. 
+// IDEA: maybe require annotation like @method or define function with mt instead of fn to enable this explicitly?
 // Use like this: 
-vec.add(vec2) <=> add_vec(vec, vec2)
+// vec.add(vec2) <=> add(vec, vec2)
 
-sum Result {
-    Success(Int32)
-    Error(Str)
-}
-
-sum Sign {
-    Positive(Int32)
-    Zero
-    Negative(Int32)
-}
