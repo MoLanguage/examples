@@ -16,7 +16,7 @@ fn chain(foo Foo) Foo { // can't parse pointers yet (foo *Foo) so replacing with
 }
 
 fn chain_update(foo Foo, a i32) Foo { // can't parse pointers yet (foo *Foo) so replacing with foo Foo
-  //foo.a = a
+  foo.a = a
   ret Foo
 }
 
