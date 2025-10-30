@@ -7,11 +7,11 @@ fn returns_foo() Foo {
 }
 
 fn updates_foo(foo Foo) { // can't parse pointers yet (foo *Foo) so replacing with foo Foo
-  //foo.a = 42
+  foo.a = 42
 }
 
 fn chain(foo Foo) Foo { // can't parse pointers yet (foo *Foo) so replacing with foo Foo
-  //foo.a = 42
+  foo.a = 42
   ret Foo
 }
 
@@ -25,7 +25,7 @@ fn main() {
   i i32 := foo.a
   i = returns_foo().a // should also work
   
-  //foo.updates_foo()
+  foo.updates_foo()
   
   //<expr>(.<fn_call>|<field>)*
   
