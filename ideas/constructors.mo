@@ -26,7 +26,8 @@ fn main() {
 // Seperate idea:
 
 fn main() {
-  foo Foo := Foo 
+  foo Foo := Foo
+  foo Foo := new // have new keyword as shorthand?
   // the only struct constructor that exists is this. Just state the struct name. 
   // This will return an empty struct with default values.
   // It's an expression that returns a pointer to the new object. 

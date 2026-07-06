@@ -1,0 +1,50 @@
+Program -> Decl*
+
+Decl -> StructDecl | UseDecl | SumDecl | FnDecl
+
+StructDecl -> "struct" "{" VarDecl
+
+
+1. Name Resolution & Scoping
+
+    [ ] Verify every Ident (variable, function, type) actually exists in the current scope or global symbol table.
+
+    [ ] Check for naming collisions (e.g., declaring two variables with the same name in the same scope, or a struct and a function with the same name).
+
+    [ ] Ensure use declarations point to valid modules/files.
+
+2. Type Checking
+
+    [ ] Check binary operations: Do the left and right sides of +, -, == match? (e.g., prevent 5 + "hello").
+
+    [ ] Check assignments: Does the right-hand side of = match the type of the left-hand side?
+
+    [ ] Check return types: Does the ret expression match the function's declared return type?
+
+    [ ] Check if and for conditions: Guarantee the expression evaluates to a bool.
+
+3. Structs & Sum Types
+
+    [ ] Zero-Initialization: If a variable is declared without assignment (foo Foo), generate the zero-init LLVM instructions.
+
+    [ ] Struct Literals: When parsing Foo { a = 10 }, verify a is actually a field on Foo, and check that the type matches. Ensure omitted fields are zeroed.
+
+    [ ] Sum Type Access: Verify that users are not trying to access inner variant data using a simple dot operator without pattern matching (if you decide to enforce that safety).
+
+4. Uniform Function Call Syntax (UFCS)
+
+    [ ] When encountering a.foo(), check if a is a struct/sum.
+
+    [ ] If it is, search the symbol table for a function foo where the first parameter is typeof(a) or *typeof(a).
+
+    [ ] Transform the AST node from a FieldAccess method call into a standard function call: foo(&a).
+
+5. Generics & Monomorphization
+
+    [ ] Instantiation: When a generic struct or function is called with concrete types (e.g., List[i32]), clone the AST node for that struct/function.
+
+    [ ] Substitution: Walk the cloned AST and replace every instance of the generic placeholder T with the concrete type i32.
+
+    [ ] Trait Bounds Check: If T impl PartialOrd, look at the PartialOrd trait definition. Verify that i32 has all the required functions in the symbol table. If not, throw a compile error.
+
+    [ ] Name Mangling: Rename the cloned struct/function for the LLVM backend (e.g., List_i32, max_i32_i32). 

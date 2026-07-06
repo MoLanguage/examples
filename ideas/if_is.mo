@@ -3,6 +3,11 @@ sum Result {
     Error(Str)
 }
 
+sum Option(T) {
+  Some(T)
+  None
+}
+
 sum Sign {
     Positive(i32)
     Zero

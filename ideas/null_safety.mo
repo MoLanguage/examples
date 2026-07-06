@@ -1,12 +1,16 @@
 thing0 Foo?   // maybe null Foo
-thing1 *?Foo  // maybe null pointer to an Foo 
+thing1 *?Foo  // maybe null pointer to a Foo 
 thing2 *?Foo? // maybe null pointer to a maybe null Foo
 
 
 // By default, variables cannot be nil
 fn null_safety() {
   non_null Foo
-  non_null = nil // panic!
+  non_null = returns_nil() // panic!
+}
+
+fn returns_nil() Foo {
+  nil
 }
 
 fn takes_non_null(a Foo) { }
@@ -40,3 +44,11 @@ bar.init42()
 
 // or this
 bar Bar = init42(&Bar)
+
+
+// Maybe allow default values for reserved default method:
+// not sure how that would work with scoping rules etc.
+
+fn default(foo *Foo) {
+  // --- Initialization logic ---
+}

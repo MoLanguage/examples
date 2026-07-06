@@ -15,7 +15,7 @@ fn chain(foo Foo) Foo { // can't parse pointers yet (foo *Foo) so replacing with
   ret Foo
 }
 
-fn chain_update(foo Foo, a i32) Foo { // can't parse pointers yet (foo *Foo) so replacing with foo Foo
+fn chain_update(foo *Foo, a i32) Foo { // can't parse pointers yet (foo *Foo) so replacing with foo Foo
   foo.a = a
   ret Foo
 }
@@ -34,6 +34,7 @@ fn main() {
   
   foo.module:chain().module:chain() // should work
   foo.module:chain_update(10).module:chain_update(10)
+  foo.module1:submodule1:chain_update(10).module2:submodule2:chain_update2(10)
   
-  foo.module:variable // doesnt work because struct fields belong to the struct, not to a module like functions do
+  //foo.module:variable // doesnt work because struct fields belong to the struct, not to a module like functions do
 }

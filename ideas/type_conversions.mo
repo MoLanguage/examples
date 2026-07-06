@@ -7,5 +7,5 @@ fn main() {
     thing str := "Hallo!"
     num i32 := 1
 
-    thing.append(num as str)
+    thing.append(convert(num, i32)) // types as values
 }

@@ -1,4 +1,4 @@
-use rand:int_in_range
+use rand:int_in_range "random"
 
 fn main() {
   print(generate_message())
@@ -8,9 +8,8 @@ fn generate_message() str {
   if int_in_range(1, "test") > 5 { ret "Hello, world!" } else { ret "Falafeleistee" }
 }
 
-fn foo(bar i32, baz i32) i32 {
+fn foo(bar *i32, baz i32) i32 {
   a i32 := 10
-  bar /= a
   if len(generate_message()) > 5 {}
   ret bar + baz
 }
