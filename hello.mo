@@ -1,9 +1,5 @@
-use std:io "schinken"
+use std:io
 
-main() {
-  schinken:print("Hello, world\n", "two")
-}
-
-fn main_correct() {
-  schinken:print("Hello, world\n", "two")
+fn main() {
+	io:print("hewwo")
 }
