@@ -3,7 +3,7 @@ sum Result {
     Error(Str)
 }
 
-sum Option(T) {
+sum Option[T] {
   Some(T)
   None
 }
