@@ -33,8 +33,8 @@ fn chain_update(foo Foo, a i32) Foo { // can't parse pointers yet (foo *Foo) so 
 }
 
 fn main() {
-  foo Foo := Foo// { a = 10 }
-  i i32 := foo.a
+  foo Foo = Foo// { a = 10 }
+  i i32 = foo.a
   i = returns_foo().a // should also work
   
   foo.updates_foo()
