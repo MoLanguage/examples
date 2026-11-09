@@ -1,34 +1,47 @@
-// Basic generic linked list
+// Generics
+
+use std:mem:Allocator
+
+// generic struct
 struct List[T] {
-    value T
-    next_list List[T]
+	items []w T
+	len usize
 }
 
-//nums := List[i32] // list can be instantiated with actual type.
-
-// One 'MapEntry' as simple example for a type with 2 generic type parameters. Types require implementation of given traits
+// two type parameters
 struct MapEntry[K, V] {
-    K key 
-    V value 
-}
-
-// Multiple generic parameters
-fn compare [A impl Ord Hash, B impl Ord Hash] (first A, second B) Ordering {
-    // Implementation
-}
-
-// Or maybe with multiple generics of the same type and generic return type
-fn max[A impl PartialOrd](x A, y A) A {
-    ret if x > y { x } else { y }
-}
-
-fn test() {
-  list := List[i32] 
-  list.create()
-  find:[i32](&list, 10)
+	key K
+	value V
 }
 
 // generic function
-fn find[T](list *List[T], target T) i32 { 
-    // Implementation 
+fn append[T](list &w List[T], item T, alloc &w Allocator) {
+	// Implementation
+}
+
+fn find[T impl Eq](list &List[T], target T) Option[usize] {
+	// Implementation
+}
+
+// trait bounds: several traits separated by spaces
+fn compare[A impl Ord Hash, B impl Ord Hash](first A, second B) Ordering {
+	// Implementation
+}
+
+fn max[T impl Ord](x T, y T) T {
+	ret if x > y { x } else { y }
+}
+
+fn test(alloc &w Allocator) {
+	list List[i32] = zero   // empty list
+
+	// type arguments are inferred...
+	list.append(10, alloc)
+
+	// ...or given explicitly with the "lil fish" :[]
+	append:[i32](&list, 20, alloc)
+	index _ = find:[i32](&list, 10)
+
+	entry MapEntry[str, i32] = .{ key = "answer", value = 42 }
+	biggest _ = max(3, 7)
 }

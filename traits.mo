@@ -1,49 +1,83 @@
-// generic trait example
+// Traits, impl and operator overloading
 
-trait PartialOrd[T] {
-  fn cmp[T](first *Self, second: *T) Ordering
+use std:io:print
+
+// traits name the types they're about as parameters, there is no Self
+trait Feedable[T] {
+	fn feed(hungry &w T)
 }
 
-trait PartialOrd[T] {
-  fn cmp[T](first *Self, second: *T) Ordering
+struct Cat { name str, food_level u32 }
+struct Human { name str, food_level u32 }
+
+// impl states that a trait is implemented; the compiler requires the functions
+impl Feedable[Cat] Feedable[Human]
+
+fn feed(cat &w Cat) {
+	cat.food_level += 10
 }
 
-sum Ordering {
-  Greater
-  Equal
-  Less
+fn feed(human &w Human) {
+	human.food_level += 20
 }
 
-impl PartialOrd[NumWrapper], PartialOrd[i32]
-
-// this implementation is forced by the compiler because of impl PartialOrd[NumWrapper] in NumWrapper's struct definition
-fn cmp(first *NumWrapper, second: *NumWrapper) Ordering {
-  ret first.num.cmp(second.num) // assuming type i32 has an implementation for PartialOrd[i32]]
+// generic function using the trait
+fn feed_twice[T impl Feedable](hungry &w T) {
+	hungry.feed()
+	hungry.feed()
 }
 
-// implementing a trait on a struct allows a value of that struct type to be used as generic function arguments that ask for a generic type implementing PartialOrd 
-struct NumWrapper { 
-  num i32
+// --- Ordering ---
+
+sum Ordering { Less, Equal, Greater }
+
+// operator traits take their operands by value (see INTRODUCTION.md)
+trait Ord[T] {
+	fn cmp(a T, b T) Ordering
 }
 
-// struct String impl PartialEq[String], PartialEq[str] { ... }
+struct NumWrapper { num i32 }
 
-// To make the * operator work, Vector2 needs to implement a multiplication trait.
-// If traits weren't generic, Vector2 could only multiply with another Vector2. But because the trait is generic, you can explicitly tell the compiler how to multiply a Vector2 with a float:
-trait Multiply[Rhs] {
-    fn mul(a *Self, b *Rhs)
+impl Ord[NumWrapper]
+
+fn cmp(a NumWrapper, b NumWrapper) Ordering {
+	ret cmp(a.num, b.num) // i32 has a built-in Ord[i32]
 }
 
-// 1. Vector * Vector
-// 2. Vector * Float
-struct Vector2 impl Multiply[Vector2], Multiply[f32] {
-    x f32
-    y f32
+// --- Operator overloading ---
+// The * operator works through a trait. Because the trait is generic over both
+// operands, Vec2 can be multiplied with another Vec2 and with an f32:
+
+trait Mul[L, R, Out] {
+	fn mul(a L, b R) Out
+}
+
+struct Vec2 { x f32, y f32 }
+
+impl Mul[Vec2, Vec2, Vec2] Mul[Vec2, f32, Vec2]
+
+fn mul(a Vec2, b Vec2) Vec2 {
+	ret .{ x = a.x * b.x, y = a.y * b.y }
+}
+
+fn mul(a Vec2, b f32) Vec2 {
+	ret .{ x = a.x * b, y = a.y * b }
 }
 
 fn main() {
-  numwrapper := NumWrapper
-  numwrapper.num = 10
-  cmp(&numwrapper, &numwrapper)
-  numwrapper.cmp(&numwrapper)
+	cat Cat = .{ name = "Matz", food_level = 0 }
+	feed_twice(&cat)
+
+	one NumWrapper = .{ num = 1 }
+	two NumWrapper = .{ num = 2 }
+	if one < two {                  // uses Ord[NumWrapper]
+		print("one is smaller")
+	}
+	if cmp(one, two) is Less {      // same thing, explicitly
+		print("still smaller")
+	}
+
+	v Vec2 = .{ x = 1, y = 2 }
+	scaled _ = v * 2.0              // mul(v, 2.0), the literal becomes an f32
+	squared _ = v * v               // mul(v, v)
 }

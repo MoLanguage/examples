@@ -1,69 +1,78 @@
+// Sum types, Option and pattern matching with if is
 
-// I would like to implement parsing of sum types and parsing of generic structs, sum-types and functions.
+use std:io:print
 
-
-// Then i'd like to implement the impl Trait syntax on the struct/sum-type definitions. 
-
-
-// The grammar would look roughly like this: struct Foo impl Trait1 (,TraitX)* {...}
-
-
-// sum types are defined like this:
-
-sum Result {
-    Success(i32)
-    Error(Str)
+// variants without data, separated by line breaks...
+sum Season {
+	Spring
+	Summer
+	Fall
+	Winter
 }
 
-sum Sign {
-    Positive(i32)
-    Zero
-    Negative(i32)
+// ...or by commas
+sum Direction { North, East, South, West }
+
+// variants with unnamed (tuple-like) or named (struct-like) data
+sum Shape {
+	Circle(f32)
+	Rect(f32, f32)
+	Polygon { points []Vec2, closed bool }
+	Empty
 }
 
-sum Token {
-  Identifier { value str }
-  Number { value i32 }
+// generic sum types
+sum Option[T] {
+	Some(T)
+	None
 }
 
-
-sum MyType {
-    Variant // Variant without members
-    Variant(Foo) // with one unnamed member
-    Variant(Foo, Foo) // multiple unnamed members
-    Variant {
-      field Foo // Variant with named members (looks like struct definition)
-    }
+sum Result[T, E] {
+	Ok(T)
+	Err(E)
 }
 
+struct Vec2 { x f32, y f32 }
 
-//sum types can also be generic:
-
-
-sum Option(T) {
-  Some(T)
-  None
+// there is no null: absence is Option
+fn find(nums []i32, wanted i32) Option[usize] {
+	i usize = 0
+	for i < len(nums) {
+		if nums[i] == wanted { ret Some(i) }
+		i += 1
+	}
+	ret None
 }
 
-// the variants of sum types definitions can be either seperated by LineBreak tokens (newlines) or by commas ','. Exactly like struct definitions
-
-sum Seasons {
-  Spring, Summer, Fall, Winter
+fn area(shape Shape) f32 {
+	// several arms; else handles the rest
+	ret if shape is {
+		Circle(r) { 3.14159 * r * r }
+		Rect(w, h) { w * h }
+	} else {
+		0.0
+	}
 }
 
-sum Seasons {
-  Spring
-  Summer 
-  Fall
-  Winter
-}
+fn main() {
+	nums [4]i32 = .{ 1, 2, 3, 4 }
 
-// sum types can also implement traits:
+	// one pattern
+	if find(nums[0..4], 3) is Some(index) {
+		print(index)
+	}
 
-sum Season impl Ord {
-  Spring, Summer, Fall, Winter
-}
+	// several arms, named data
+	shape Shape = Circle(2.0)
+	if shape is {
+		Circle(radius) { print(radius) }
+		Polygon { points, closed } {
+			print(closed)
+		}
+		Empty { print("nothing") }
+	} else {
+		print("rectangle")
+	}
 
-fn compare(first *Season, second *Season) Ordering {
-  return first.ordinal.cmp(second.ordinal) // ordinal being a field of a number available to every sum type instance
+	print(area(shape))
 }
